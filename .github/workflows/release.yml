@@ -1,0 +1,47 @@
+name: Build and Release
+
+# Builds the .exe on a Windows runner and publishes a GitHub Release
+# every time you push to main (and on manual runs).
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # required to create releases + tags
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build StandUpReminder.exe
+        shell: powershell
+        run: .\build.ps1
+
+      - name: Stage release files
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force release | Out-Null
+          Copy-Item dist\StandUpReminder.exe release\
+          if (Test-Path assets\standup.gif) { Copy-Item assets\standup.gif release\ }
+          Copy-Item Install.ps1, Install.bat, Uninstall.ps1, Uninstall.bat, README.md release\
+          Compress-Archive -Path release\* -DestinationPath StandUpReminder.zip -Force
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v0.1.${{ github.run_number }}
+          name: Stand Up Reminder v0.1.${{ github.run_number }}
+          body: |
+            Automated build.
+
+            **How to use:** download `StandUpReminder.zip`, unzip, and double-click `Install.bat`
+            (or run `StandUpReminder.exe` directly). Windows may show a SmartScreen prompt for a
+            new/unsigned app — click **More info -> Run anyway**.
+          files: |
+            StandUpReminder.zip
+            dist/StandUpReminder.exe
+          generate_release_notes: true

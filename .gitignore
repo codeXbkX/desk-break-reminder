@@ -1,0 +1,18 @@
+# Build output (the exe/ico are produced by build.ps1 / CI)
+dist/
+release/
+*.zip
+
+# Node / SVG->GIF render pipeline
+assets/node_modules/
+assets/frames/
+
+# Per-user runtime settings
+settings.json
+settings.ini
+
+# OS / editor cruft
+Thumbs.db
+Desktop.ini
+*.user
+.vs/

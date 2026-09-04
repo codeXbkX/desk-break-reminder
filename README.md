@@ -1,4 +1,4 @@
-# Stand Up Reminder 🧍‍♂️
+# Stand Up Reminder 🧍
 
 I sit at my desk for hours. Some days I wouldn't get up even once, and my lower
 back started paying the price - that dull ache that follows you into the evening.

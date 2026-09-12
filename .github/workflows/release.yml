@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build StandUpReminder.exe
+      - name: Build DeskBreakReminder.exe
         shell: powershell
         run: .\build.ps1
 
@@ -25,23 +25,23 @@ jobs:
         shell: powershell
         run: |
           New-Item -ItemType Directory -Force release | Out-Null
-          Copy-Item dist\StandUpReminder.exe release\
+          Copy-Item dist\DeskBreakReminder.exe release\
           if (Test-Path assets\standup.gif) { Copy-Item assets\standup.gif release\ }
           Copy-Item Install.ps1, Install.bat, Uninstall.ps1, Uninstall.bat, README.md release\
-          Compress-Archive -Path release\* -DestinationPath StandUpReminder.zip -Force
+          Compress-Archive -Path release\* -DestinationPath DeskBreakReminder.zip -Force
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v0.1.${{ github.run_number }}
-          name: Stand Up Reminder v0.1.${{ github.run_number }}
+          name: Desk Break Reminder v0.1.${{ github.run_number }}
           body: |
             Automated build.
 
-            **How to use:** download `StandUpReminder.zip`, unzip, and double-click `Install.bat`
-            (or run `StandUpReminder.exe` directly). Windows may show a SmartScreen prompt for a
+            **How to use:** download `DeskBreakReminder.zip`, unzip, and double-click `Install.bat`
+            (or run `DeskBreakReminder.exe` directly). Windows may show a SmartScreen prompt for a
             new/unsigned app — click **More info -> Run anyway**.
           files: |
-            StandUpReminder.zip
-            dist/StandUpReminder.exe
+            DeskBreakReminder.zip
+            dist/DeskBreakReminder.exe
           generate_release_notes: true

@@ -1,4 +1,4 @@
-# build.ps1 - generates the app icon and compiles StandUpReminder.exe
+# build.ps1 - generates the app icon and compiles DeskBreakReminder.exe
 # Uses the .NET Framework C# compiler that ships with Windows (no downloads).
 
 $ErrorActionPreference = 'Stop'
@@ -7,7 +7,7 @@ Add-Type -AssemblyName System.Drawing
 $root    = $PSScriptRoot
 $src     = Join-Path $root 'src\Program.cs'
 $outDir  = Join-Path $root 'dist'
-$exePath = Join-Path $outDir 'StandUpReminder.exe'
+$exePath = Join-Path $outDir 'DeskBreakReminder.exe'
 $icoPath = Join-Path $outDir 'app.ico'
 
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
@@ -91,7 +91,7 @@ if (-not (Test-Path $csc)) {
 }
 if (-not (Test-Path $csc)) { throw 'C# compiler (csc.exe) not found.' }
 
-Write-Host 'Compiling StandUpReminder.exe...' -ForegroundColor Cyan
+Write-Host 'Compiling DeskBreakReminder.exe...' -ForegroundColor Cyan
 if (Test-Path $exePath) { Remove-Item $exePath -Force }
 $args = @(
     '/nologo',

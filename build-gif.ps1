@@ -60,7 +60,7 @@ if (-not (Test-Path $gifOut)) { throw "ffmpeg did not produce standup.gif." }
 # 6) Copy alongside the built exe and any install location.
 $dist = Join-Path $root 'dist'
 if (Test-Path $dist) { Copy-Item $gifOut (Join-Path $dist 'standup.gif') -Force }
-$installed = Join-Path $env:LOCALAPPDATA 'StandUpReminder'
+$installed = Join-Path $env:LOCALAPPDATA 'DeskBreakReminder'
 if (Test-Path $installed) { Copy-Item $gifOut (Join-Path $installed 'standup.gif') -Force }
 
 Write-Host "`nDone: $gifOut" -ForegroundColor Green

@@ -1,7 +1,5 @@
-// StandUpReminder - a modern, Gen-Z styled "stand up" reminder for Windows.
-// Compiled to a native .exe with the .NET Framework C# compiler (csc.exe).
-// Features: system tray, configurable interval, rotating messages,
-// animated sit-to-stand figure, gradient full-screen flash, and notifications.
+// Desk Break Reminder - a Windows tray app that reminds you to take a break
+// (stand, stretch, walk, hydrate, rest your eyes) on a set interval.
 
 using System;
 using System.Drawing;
@@ -11,7 +9,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace StandUpReminder
+namespace DeskBreakReminder
 {
     static class Program
     {
@@ -30,12 +28,12 @@ namespace StandUpReminder
             }
 
             bool createdNew;
-            using (var mutex = new Mutex(true, "StandUpReminder_SingleInstance_v1", out createdNew))
+            using (var mutex = new Mutex(true, "DeskBreakReminder_SingleInstance_v1", out createdNew))
             {
                 if (!createdNew)
                 {
-                    MessageBox.Show("Stand Up Reminder is already running (check the system tray).",
-                        "Stand Up Reminder", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Desk Break Reminder is already running (check the system tray).",
+                        "Desk Break Reminder", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
                 Application.Run(new TrayApp());
@@ -44,7 +42,7 @@ namespace StandUpReminder
     }
 
     // ------------------------------------------------------------------
-    // Settings, persisted to %APPDATA%\StandUpReminder\settings.ini
+    // Settings, persisted to %APPDATA%\DeskBreakReminder\settings.ini
     // ------------------------------------------------------------------
     class Settings
     {
@@ -60,7 +58,7 @@ namespace StandUpReminder
             {
                 return Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "StandUpReminder");
+                    "DeskBreakReminder");
             }
         }
         static string FilePath { get { return Path.Combine(Dir, "settings.ini"); } }
@@ -248,7 +246,7 @@ namespace StandUpReminder
             tray = new NotifyIcon();
             tray.Icon = appIcon;
             tray.Visible = true;
-            tray.Text = "Stand Up Reminder";
+            tray.Text = "Desk Break Reminder";
             tray.DoubleClick += (s, e) => ShowSettings();
 
             var menu = new ContextMenuStrip();
@@ -274,7 +272,7 @@ namespace StandUpReminder
             timer.Tick += (s, e) => Fire();
             RestartTimer();
 
-            tray.ShowBalloonTip(4000, "Stand Up Reminder",
+            tray.ShowBalloonTip(4000, "Desk Break Reminder",
                 "Running in the tray. First stretch in " + settings.IntervalMinutes + " min. Let's go!",
                 ToolTipIcon.Info);
         }
@@ -326,7 +324,7 @@ namespace StandUpReminder
                     settings = dlg.Result;
                     settings.Save();
                     RestartTimer();
-                    tray.Text = "Stand Up Reminder - every " + settings.IntervalMinutes + " min";
+                    tray.Text = "Desk Break Reminder - every " + settings.IntervalMinutes + " min";
                 }
             }
         }
@@ -347,19 +345,16 @@ namespace StandUpReminder
     // ------------------------------------------------------------------
     class FlashForm : Form
     {
-        readonly string title;
         readonly string sub;
-        readonly string kind;
         readonly Settings settings;
         readonly Color[] palette;
         readonly System.Windows.Forms.Timer anim;
         static readonly Random arng = new Random();
         readonly int animKind;   // 0 = sit-to-stand, 1 = walking (drawn fallback)
-        float phase;          // 0..1 animation loop for the figure
-        float bgShift;        // gradient animation
+        float phase;
+        float bgShift;
         int elapsedMs;
         readonly int totalMs;
-        Rectangle dismissRect;
 
         // Animated GIF character (drawn manually so it composites with transparency)
         Image gifImage;
@@ -396,9 +391,7 @@ namespace StandUpReminder
 
         public FlashForm(Prompt p, Settings settings)
         {
-            this.title = p.Title;
             this.sub = p.Sub;
-            this.kind = p.Kind;
             this.titleUpper = p.Title.ToUpperInvariant();
             this.kindUpper = p.Kind.ToUpperInvariant();
             this.settings = settings;
@@ -622,7 +615,7 @@ namespace StandUpReminder
             string pill = "I'm up   -   tap anywhere (" + remain + "s)";
             SizeF ps = g.MeasureString(pill, fPill);
             int pw = (int)ps.Width + 56, ph = (int)ps.Height + 26;
-            dismissRect = new Rectangle(cx - pw / 2, (int)(Height * 0.86f), pw, ph);
+            var dismissRect = new Rectangle(cx - pw / 2, (int)(Height * 0.86f), pw, ph);
             using (var path = Rounded(dismissRect, ph / 2))
             using (var pb = new SolidBrush(Color.FromArgb(40, 255, 255, 255)))
             using (var pen = new Pen(Color.FromArgb(160, 255, 255, 255), 2f))
@@ -842,7 +835,7 @@ namespace StandUpReminder
                 PaletteIndex = current.PaletteIndex
             };
 
-            Text = "Stand Up Reminder - Settings";
+            Text = "Desk Break Reminder - Settings";
             Size = new Size(420, 400);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -853,7 +846,7 @@ namespace StandUpReminder
 
             var header = new Label
             {
-                Text = "Stand Up Reminder",
+                Text = "Desk Break Reminder",
                 Font = new Font("Segoe UI", 16f, FontStyle.Bold),
                 ForeColor = Color.White,
                 AutoSize = true,

@@ -1,4 +1,4 @@
-# Stand Up Reminder 🧍
+# Desk Break Reminder 🧍
 
 I sit at my desk for hours. Some days I wouldn't get up even once, and my lower
 back started paying the price - that dull ache that follows you into the evening.
@@ -13,8 +13,8 @@ rest your eyes**. Hard to ignore, easy to dismiss - click anywhere or press any 
 
 ## Get it
 
-1. Download **`StandUpReminder.zip`** from the [Releases](../../releases/latest) page.
-2. Unzip and double-click **`Install.bat`** (or just run `StandUpReminder.exe`).
+1. Download **`DeskBreakReminder.zip`** from the [Releases](../../releases/latest) page.
+2. Unzip and double-click **`Install.bat`** (or just run `DeskBreakReminder.exe`).
 3. Look for the icon in your system tray, bottom-right. Right-click it for settings.
 
 Windows might show a SmartScreen warning the first time (new, unsigned app) - click

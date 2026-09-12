@@ -1,5 +1,5 @@
-# Install.ps1 - installs Stand Up Reminder for the current user (no admin needed).
-# Copies the app to %LocalAppData%\StandUpReminder and creates Start Menu +
+# Install.ps1 - installs Desk Break Reminder for the current user (no admin needed).
+# Copies the app to %LocalAppData%\DeskBreakReminder and creates Start Menu +
 # Desktop shortcuts. Optionally starts it at Windows login.
 
 param(
@@ -18,22 +18,22 @@ function Find-Src($names) {
     return $null
 }
 
-$srcExe = Find-Src @('StandUpReminder.exe', 'dist\StandUpReminder.exe')
+$srcExe = Find-Src @('DeskBreakReminder.exe', 'dist\DeskBreakReminder.exe')
 if (-not $srcExe) {
     # Source checkout without a build yet - compile it (needs src\Program.cs).
     if (Test-Path (Join-Path $PSScriptRoot 'build.ps1')) {
         Write-Host "Executable not found. Building it first..." -ForegroundColor Yellow
         & (Join-Path $PSScriptRoot 'build.ps1')
-        $srcExe = Find-Src @('dist\StandUpReminder.exe')
+        $srcExe = Find-Src @('dist\DeskBreakReminder.exe')
     }
 }
-if (-not $srcExe) { throw "StandUpReminder.exe not found and could not be built." }
+if (-not $srcExe) { throw "DeskBreakReminder.exe not found and could not be built." }
 
-$installDir = Join-Path $env:LOCALAPPDATA 'StandUpReminder'
+$installDir = Join-Path $env:LOCALAPPDATA 'DeskBreakReminder'
 New-Item -ItemType Directory -Force -Path $installDir | Out-Null
 
 Copy-Item $srcExe -Destination $installDir -Force
-$exe = Join-Path $installDir 'StandUpReminder.exe'
+$exe = Join-Path $installDir 'DeskBreakReminder.exe'
 
 $srcIco = Find-Src @('app.ico', 'dist\app.ico')
 if ($srcIco) { Copy-Item $srcIco -Destination (Join-Path $installDir 'app.ico') -Force }
@@ -55,16 +55,16 @@ function New-Shortcut($path) {
 
 # Start Menu shortcut
 $startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
-New-Shortcut (Join-Path $startMenu 'Stand Up Reminder.lnk')
+New-Shortcut (Join-Path $startMenu 'Desk Break Reminder.lnk')
 
 # Desktop shortcut
 $desktop = [Environment]::GetFolderPath('Desktop')
-New-Shortcut (Join-Path $desktop 'Stand Up Reminder.lnk')
+New-Shortcut (Join-Path $desktop 'Desk Break Reminder.lnk')
 
 # Optional: run at login
 if ($RunAtStartup) {
     $runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
-    Set-ItemProperty -Path $runKey -Name 'StandUpReminder' -Value "`"$exe`""
+    Set-ItemProperty -Path $runKey -Name 'DeskBreakReminder' -Value "`"$exe`""
     Write-Host 'Enabled: start automatically at login.' -ForegroundColor Green
 }
 

@@ -16,3 +16,6 @@ Thumbs.db
 Desktop.ini
 *.user
 .vs/
+
+# Local Claude config
+.claude/
